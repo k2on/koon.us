@@ -22,8 +22,17 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`font-sans ${inter.variable}`}>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+      <body className={`font-sans ${inter.variable} dark`}>
+        <TRPCReactProvider>
+            {children}
+            <div className="bg-zinc-950 border-t bottom-0 w-full py-4">
+                <div className="max-w-3xl mx-auto">
+                    <span className="text-sm text-gray-400">
+                        © 2024
+                    </span>
+                </div>
+            </div>
+        </TRPCReactProvider>
       </body>
     </html>
   );
