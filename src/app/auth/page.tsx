@@ -34,6 +34,7 @@ export default function Auth() {
     const [value, setValue] = useState("");
     const [code, setCode] = useState("");
     const [isCodeSent, setIsCodeSent] = useState(false);
+    const [otpError, setOtpError] = useState("");
 
 
     const rifm = useRifm({
@@ -55,13 +56,26 @@ export default function Auth() {
     }
 
     const onLogin = () => {
+        setOtpError("");
         signIn("credentials", { redirect: false, phone, code }).then(to => {
+            console.log(to);
+            if (to && to.url && to.url.includes("error?error=")) {
+                const errorMsg = decodeURI(to.url.split("error?error=")[1] || "");
+                setOtpError(errorMsg);
+                return;
+            } else if (to && to.error) {
+                setOtpError("Could not send a code to that number");
+                return;
+            }
             let back = "/";
             if (to?.url) {
                 const url = new URL(to.url);
                 back = url.searchParams.get("callbackUrl") || "/";
             }
             window.location.href = back;
+        })
+        .catch(e => {
+            console.error("Error", e);
         });
     }
 
@@ -99,6 +113,7 @@ export default function Auth() {
                             </>
                           )}
                         />
+                    {otpError && <div className="text-red-500 text-sm flex flex-row items-center space-x-1 mt-1"><OctagonAlertIcon className="w-4 h-4" /> <span>{otpError}</span></div>}
 
                     </>
                     : <>

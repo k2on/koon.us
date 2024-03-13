@@ -3,6 +3,8 @@ import Credentials from "next-auth/providers/credentials";
 import { v4 } from "uuid";
 import { users } from "../db/schema";
 import { db } from "../db";
+import { client } from "../sms";
+import { env } from "@/env";
 
 interface TwilioProviderProps {
     secret: string
@@ -26,6 +28,12 @@ export const TwilioProvider = ({ secret }: TwilioProviderProps) => Credentials({
     },
     async authorize(credentials, req) {
         const { phone, code } = credentials!;
+        const resp = await client.verify.v2
+            .services(env.TWILIO_SERVICE_SID)
+            .verificationChecks
+            .create({ to: phone, code: code });
+        if (resp.status != "approved") throw Error("Invalid Code");
+            
 
         const user = await db.query.users.findFirst({
           where: eq(users.phone, phone),
