@@ -2,7 +2,7 @@ import { db } from "@/server/db";
 import { buildings } from "@/server/db/schema";
 import { isNull } from "drizzle-orm";
 
-export const dynamic = 'auto'
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
     const college = await db.query.colleges.findFirst({
