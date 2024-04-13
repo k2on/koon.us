@@ -7,6 +7,7 @@ import {
 } from "@/server/api/trpc";
 import { buildingPoints, buildings, floors, posts } from "@/server/db/schema";
 import { eq, isNull } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export const mapsRouter = createTRPCRouter({
   getCollege: publicProcedure.query(async ({ ctx }) => {
@@ -74,6 +75,7 @@ export const mapsRouter = createTRPCRouter({
                     set: floor
                 });
         }
+        revalidatePath("/api/maps");
         return true;
     }),
   getSecretMessage: protectedProcedure.query(() => {

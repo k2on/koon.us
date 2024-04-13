@@ -12,7 +12,7 @@ export async function GET() {
                 },
                 where: isNull(buildings.removedAt),
             }
-        }
+        },
     });
     return Response.json(college);
 }
