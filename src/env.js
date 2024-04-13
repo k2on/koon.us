@@ -39,7 +39,7 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    // NEXT_PUBLIC_CLIENTVAR: z.string(),
+    NEXT_PUBLIC_GOOGLE_MAPS: z.string(),
   },
 
   /**
@@ -54,6 +54,7 @@ export const env = createEnv({
     TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
     TWILIO_SERVICE_SID: process.env.TWILIO_SERVICE_SID,
+    NEXT_PUBLIC_GOOGLE_MAPS: process.env.NEXT_PUBLIC_GOOGLE_MAPS,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

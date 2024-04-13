@@ -25,13 +25,6 @@ export default function RootLayout({
       <body className={`font-sans ${inter.variable} dark`}>
         <TRPCReactProvider>
             {children}
-            <div className="bg-zinc-950 border-t bottom-0 w-full py-4">
-                <div className="max-w-3xl mx-auto">
-                    <span className="text-sm text-gray-400">
-                        © 2024
-                    </span>
-                </div>
-            </div>
         </TRPCReactProvider>
       </body>
     </html>

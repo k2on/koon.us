@@ -8,6 +8,7 @@ import {
   text,
   timestamp,
   varchar,
+  doublePrecision,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -111,3 +112,91 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   })
 );
+
+export const colleges = createTable(
+    "college",
+    {
+        id: varchar("id", { length: 255 })
+            .notNull()
+            .primaryKey(),
+        name: varchar("name", { length: 255 })
+            .notNull(),
+        lat: doublePrecision("lat")
+            .notNull(),
+        lng: doublePrecision("lng")
+            .notNull(),
+    },
+)
+
+export const collegeRelations = relations(colleges, ({ many }) => ({
+  buildings: many(buildings),
+}));
+
+export const buildings = createTable(
+    "building",
+    {
+        id: varchar("id", { length: 255 })
+            .notNull()
+            .primaryKey(),
+        collegeId: varchar("collegeId", { length: 255 })
+            .notNull(),
+        name: varchar("name", { length: 255 })
+            .notNull(),
+        removedAt: timestamp("removedAt"),
+    },
+)
+
+
+export const buildingRelations = relations(buildings, ({ one, many }) => ({
+  college: one(colleges, {
+      fields: [buildings.collegeId],
+      references: [colleges.id],
+  }),
+  points: many(buildingPoints),
+  floors: many(floors),
+}));
+
+export const buildingPoints = createTable(
+    "buildingPoint",
+    {
+        id: varchar("id", { length: 255 })
+            .notNull()
+            .primaryKey(),
+        buildingId: varchar("buildingId", { length: 255 })
+            .notNull(),
+        lat: doublePrecision("lat")
+            .notNull(),
+        lng: doublePrecision("lng")
+            .notNull(),
+    },
+)
+
+export const pointRelations = relations(buildingPoints, ({ one }) => ({
+  building: one(buildings, {
+      fields: [buildingPoints.buildingId],
+      references: [buildings.id],
+  }),
+}));
+
+export const floors = createTable(
+    "floor",
+    {
+        id: varchar("id", { length: 255 })
+            .notNull()
+            .primaryKey(),
+        buildingId: varchar("buildingId", { length: 255 })
+            .notNull(),
+        label: varchar("label", { length: 255 })
+            .notNull(),
+        imageUrl: varchar("imageUrl", { length: 255 })
+            .notNull(),
+    },
+)
+
+export const floorRelations = relations(floors, ({ one }) => ({
+  building: one(buildings, {
+      fields: [floors.buildingId],
+      references: [buildings.id],
+  }),
+}));
+
